@@ -8,44 +8,32 @@ import org.alpha_sync_java.application.interfaces.Sender;
 import org.alpha_sync_java.application.usecases.SSDP;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import javax.security.auth.callback.Callback;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 
 public class LibraryTest {
+//    Need to check call execute
+//    Verify that message sent
+//    send a mock event to the listener
+//    Verify that message decoded well
     @Test public void someLibraryMethodReturnsTrue() throws Exception {
-        // Arrange
-        ArgumentCaptor<Consumer<String>> listenerCaptor = ArgumentCaptor.forClass(Consumer.class);
+        Sender mockSender = mock(Sender.class);
+        Listener mockListener = mock(Listener.class);
+        SSDP useCase = new SSDP(mockSender, mockListener);
 
-        AtomicReference<String> functionInput = new AtomicReference<>();
-        AtomicReference<String> functionOutput = new AtomicReference<>();
+        useCase.execute();
 
-        // Real Function that processes the input
-        Function<String, String> callback = input -> {
-            functionInput.set(input);
-            String output = input.toUpperCase();
-            functionOutput.set(output);
-            return output;
-        };
+        verify(mockSender, times(1)).send(anyString(), anyString(), anyString());
 
-        // Act
-        SSDP.execute();
-
-        // Capture and simulate message reception
-        verify(gateway).listen(listenerCaptor.capture());
-        listenerCaptor.getValue().accept("pong");
-
-        // Assert: check what the callback received and returned
-        assertEquals("Handled: pong", functionInput.get());
-        assertEquals("HANDLED: PONG", functionOutput.get());
-
-        // Optionally verify that send() was called
-        verify(gateway).send("ping");
+        ArgumentCaptor()
     }
 }
