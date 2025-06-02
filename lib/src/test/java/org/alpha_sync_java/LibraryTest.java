@@ -7,14 +7,6 @@ import org.alpha_sync_java.application.interfaces.Listener;
 import org.alpha_sync_java.application.interfaces.Sender;
 import org.alpha_sync_java.application.usecases.SSDP;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-
-import javax.security.auth.callback.Callback;
-import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Consumer;
-import java.util.function.Function;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -28,12 +20,12 @@ public class LibraryTest {
     @Test public void someLibraryMethodReturnsTrue() throws Exception {
         Sender mockSender = mock(Sender.class);
         Listener mockListener = mock(Listener.class);
-        SSDP useCase = new SSDP(mockSender, mockListener);
 
+        SSDP useCase = new SSDP();
         useCase.execute();
-
         verify(mockSender, times(1)).send(anyString(), anyString(), anyString());
+        useCase.handleResponse("UPnP/1.0 SonyImagingDevice/1.0\r\nLOCATION: test");
+        assertEquals("test", useCase.location);
 
-        ArgumentCaptor()
     }
 }
