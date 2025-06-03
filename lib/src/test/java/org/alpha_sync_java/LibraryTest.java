@@ -6,6 +6,7 @@ package org.alpha_sync_java;
 import org.alpha_sync_java.application.interfaces.Listener;
 import org.alpha_sync_java.application.interfaces.Sender;
 import org.alpha_sync_java.application.usecases.SSDP;
+import org.alpha_sync_java.domain.ServerContext;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -20,12 +21,12 @@ public class LibraryTest {
     @Test public void someLibraryMethodReturnsTrue() throws Exception {
         Sender mockSender = mock(Sender.class);
         Listener mockListener = mock(Listener.class);
-
-        SSDP useCase = new SSDP();
+        ServerContext serverContext = new ServerContext();
+        SSDP useCase = new SSDP(serverContext);
         useCase.execute();
         verify(mockSender, times(1)).send(anyString(), anyString(), anyString());
         useCase.handleResponse("UPnP/1.0 SonyImagingDevice/1.0\r\nLOCATION: test");
-        assertEquals("test", useCase.location);
+        assertEquals("test", serverContext.location.get());
 
     }
 }
