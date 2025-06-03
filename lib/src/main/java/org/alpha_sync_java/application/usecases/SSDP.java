@@ -2,6 +2,7 @@ package org.alpha_sync_java.application.usecases;
 
 
 import org.alpha_sync_java.application.interfaces.Connector;
+import org.alpha_sync_java.domain.ServerContext;
 import org.alpha_sync_java.infra.MulticastConnector;
 
 import java.io.IOException;
@@ -13,45 +14,49 @@ public class SSDP {
     private static final String DISCOVERY_ADDRESS = "239.255.255.250";
     private static final String DISCOVERY_PORT = "1900";
 
-    public CompletableFuture<String> location = new CompletableFuture<>();;
+    ServerContext serverContext;
 
     private final Connector connector;
 
-    public SSDP() throws IOException {
+    public SSDP(ServerContext serverContext) throws IOException {
         this.connector = new MulticastConnector(DISCOVERY_ADDRESS, DISCOVERY_PORT);
+        this.serverContext = serverContext;
     }
 //    should send message and register listener
-public CompletableFuture<String> execute() throws Exception {
-    CompletableFuture.runAsync(() -> {
-        try {
-            connector.listen(DISCOVERY_PORT, this::handleResponse);
-        } catch (Exception e) {
-            location.completeExceptionally(e);
+public CompletableFuture<String> execute(){
+
+            CompletableFuture.runAsync(() -> {
+                try {
+                    connector.listen(DISCOVERY_PORT, this::handleResponse);
+                } catch (Exception e) {
+                    serverContext.location.completeExceptionally(e);
+                }
+            });
+
+            ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+            CompletableFuture<String> timeout = new CompletableFuture<>();
+            scheduler.schedule(() -> timeout.completeExceptionally(new TimeoutException("Timed out!")), 3, TimeUnit.SECONDS);
+
+            CompletableFuture.runAsync(() -> {
+                while (!serverContext.location.isDone()) {
+                    try {
+                        connector.send(DISCOVERY_ADDRESS, DISCOVERY_PORT, DISCOVERY_MESSAGE);
+                        Thread.sleep(100);
+                    } catch (Exception e) {
+                        serverContext.location.completeExceptionally(e);
+                    }
+                }
+            });
+
+            CompletableFuture<String> result = CompletableFuture.anyOf(serverContext.location, timeout)
+                    .thenApply(obj -> (String) obj);
+
+            result.whenComplete((res, ex) -> scheduler.shutdown());
+
+            return result;
         }
-    });
 
-    ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-    CompletableFuture<String> timeout = new CompletableFuture<>();
-    scheduler.schedule(() -> timeout.completeExceptionally(new TimeoutException("Timed out!")), 3, TimeUnit.SECONDS);
 
-    CompletableFuture.runAsync(() -> {
-        while (!location.isDone()) {
-            try {
-                connector.send(DISCOVERY_ADDRESS, DISCOVERY_PORT, DISCOVERY_MESSAGE);
-                Thread.sleep(100);
-            } catch (Exception e) {
-                location.completeExceptionally(e);
-            }
-        }
-    });
-
-    CompletableFuture<String> result = CompletableFuture.anyOf(location, timeout)
-            .thenApply(obj -> (String) obj);
-
-    result.whenComplete((res, ex) -> scheduler.shutdown());
-
-    return result;
-}
 
     public boolean handleResponse(String response) {
         if (response.contains("UPnP/1.0 SonyImagingDevice/1.0")){
@@ -59,8 +64,8 @@ public CompletableFuture<String> execute() throws Exception {
                     .filter((keyValue) -> keyValue.startsWith("LOCATION: "))
                     .findFirst()
                     .map(s -> s.substring("LOCATION: ".length()))
-                    .map((location) -> this.location.complete(location))
-                    .orElseGet(() -> this.location.completeExceptionally(new RuntimeException("Couldn't find location")));
+                    .map((location) -> this.serverContext.location.complete(location))
+                    .orElseGet(() -> this.serverContext.location.completeExceptionally(new RuntimeException("Couldn't find location")));
             return true;
         }
         return false;
