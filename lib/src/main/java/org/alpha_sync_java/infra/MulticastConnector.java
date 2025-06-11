@@ -1,7 +1,7 @@
 package org.alpha_sync_java.infra;
 
 import org.alpha_sync_java.application.interfaces.Connector;
-import org.alpha_sync_java.domain.StreamUtils;
+import org.alpha_sync_java.domain.utils.StreamUtils;
 
 import java.io.IOException;
 import java.net.*;
@@ -10,11 +10,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static java.net.NetworkInterface.getNetworkInterfaces;
-import static java.util.Optional.of;
 
 public class MulticastConnector implements Loggable, Connector {
     MulticastSocket socket;

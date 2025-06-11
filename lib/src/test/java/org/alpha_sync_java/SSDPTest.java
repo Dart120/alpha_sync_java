@@ -6,14 +6,14 @@ package org.alpha_sync_java;
 import org.alpha_sync_java.application.interfaces.Listener;
 import org.alpha_sync_java.application.interfaces.Sender;
 import org.alpha_sync_java.application.usecases.SSDP;
-import org.alpha_sync_java.domain.ServerContext;
+import org.alpha_sync_java.domain.context.ServerContext;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 
-public class LibraryTest {
+public class SSDPTest {
 //    Need to check call execute
 //    Verify that message sent
 //    send a mock event to the listener

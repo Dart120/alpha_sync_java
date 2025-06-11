@@ -2,14 +2,18 @@ package org.alpha_sync_java.application.usecases;
 
 
 import org.alpha_sync_java.application.interfaces.Connector;
-import org.alpha_sync_java.domain.ServerContext;
+import org.alpha_sync_java.domain.communication.LocatorURL;
+import org.alpha_sync_java.domain.context.ServerContext;
+
+import org.alpha_sync_java.infra.Loggable;
 import org.alpha_sync_java.infra.MulticastConnector;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.concurrent.*;
 
-public class SSDP {
+public class SSDP implements Loggable {
     private static final String DISCOVERY_MESSAGE = "M-SEARCH * HTTP/1.1\r\n" + "HOST:239.255.255.250:1900\r\n" + "ST:upnp:rootdevice\r\n" + "MX:2\r\n" + "MAN:\"ssdp:discover\"\r\n" + "\r\n";
     private static final String DISCOVERY_ADDRESS = "239.255.255.250";
     private static final String DISCOVERY_PORT = "1900";
@@ -35,7 +39,7 @@ public CompletableFuture<String> execute(){
 
             ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
             CompletableFuture<String> timeout = new CompletableFuture<>();
-            scheduler.schedule(() -> timeout.completeExceptionally(new TimeoutException("Timed out!")), 3, TimeUnit.SECONDS);
+            scheduler.schedule(() -> timeout.completeExceptionally(new TimeoutException("Timed out!")), 15, TimeUnit.SECONDS);
 
             CompletableFuture.runAsync(() -> {
                 while (!serverContext.location.isDone()) {
@@ -60,11 +64,18 @@ public CompletableFuture<String> execute(){
 
     public boolean handleResponse(String response) {
         if (response.contains("UPnP/1.0 SonyImagingDevice/1.0")){
+            logger().info("Search found {}", "UPnP/1.0 SonyImagingDevice/1.0");
             Arrays.stream(response.split("\r?\n"))
                     .filter((keyValue) -> keyValue.startsWith("LOCATION: "))
                     .findFirst()
                     .map(s -> s.substring("LOCATION: ".length()))
-                    .map((location) -> this.serverContext.location.complete(location))
+                    .map((location) -> {
+                        try {
+                            return this.serverContext.location.complete(new LocatorURL(location));
+                        } catch (MalformedURLException e) {
+                            throw new RuntimeException("Invalid URL discovered from SSDP");
+                        }
+                    })
                     .orElseGet(() -> this.serverContext.location.completeExceptionally(new RuntimeException("Couldn't find location")));
             return true;
         }
