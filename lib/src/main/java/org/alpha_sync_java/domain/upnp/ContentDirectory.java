@@ -1,10 +1,9 @@
-package org.alpha_sync_java.domain;
+package org.alpha_sync_java.domain.upnp;
 
 import org.alpha_sync_java.domain.communication.LocatorURL;
 import org.alpha_sync_java.domain.communication.XMLTag;
 
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -62,7 +61,7 @@ public class ContentDirectory {
                         .findFirst()
                         .map(xmlTag -> {
                             try {
-                                return LocatorURL.from(baseURL, xmlTag.getTextContent());
+                                return LocatorURL.from(baseURL, xmlTag.getTextDecodedContent());
                             } catch (MalformedURLException e) {
                                 throw new RuntimeException("Could not extract SCPDURL from content directory");
                             }
@@ -72,7 +71,7 @@ public class ContentDirectory {
                         .findFirst()
                         .map(xmlTag -> {
                             try {
-                                return LocatorURL.from(baseURL, xmlTag.getTextContent());
+                                return LocatorURL.from(baseURL, xmlTag.getTextDecodedContent());
                             } catch (MalformedURLException e) {
                                 throw new RuntimeException("Could not extract controlURL from content directory");
                             }
@@ -82,7 +81,7 @@ public class ContentDirectory {
                         .findFirst()
                         .map(xmlTag -> {
                             try {
-                                return LocatorURL.from(baseURL, xmlTag.getTextContent());
+                                return LocatorURL.from(baseURL, xmlTag.getTextDecodedContent());
                             } catch (MalformedURLException e) {
                                     throw new RuntimeException("Could not extract eventSubURL from content directory");
                             }

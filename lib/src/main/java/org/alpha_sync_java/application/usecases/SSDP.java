@@ -2,6 +2,7 @@ package org.alpha_sync_java.application.usecases;
 
 
 import org.alpha_sync_java.application.interfaces.Connector;
+import org.alpha_sync_java.application.interfaces.ConnectorFactory;
 import org.alpha_sync_java.domain.communication.LocatorURL;
 import org.alpha_sync_java.domain.context.ServerContext;
 
@@ -22,8 +23,8 @@ public class SSDP implements Loggable {
 
     private final Connector connector;
 
-    public SSDP(ServerContext serverContext) throws IOException {
-        this.connector = new MulticastConnector(DISCOVERY_ADDRESS, DISCOVERY_PORT);
+    public SSDP(ServerContext serverContext, ConnectorFactory connectorFactory) throws IOException {
+        this.connector = connectorFactory.create(DISCOVERY_ADDRESS, DISCOVERY_PORT);
         this.serverContext = serverContext;
     }
 //    should send message and register listener

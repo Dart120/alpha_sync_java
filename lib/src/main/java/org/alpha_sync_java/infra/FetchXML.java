@@ -10,7 +10,7 @@ import java.io.InputStream;
 
 public class FetchXML implements RequestsXML, Loggable {
     @Override
-    public InputStream getXML(LocatorURL url) {
+    public String getXML(LocatorURL url) {
         logger().info("Requested XML from: {}", url);
         Client client = ClientBuilder.newClient();
 
@@ -18,7 +18,7 @@ public class FetchXML implements RequestsXML, Loggable {
 
         Response response = target.request().get();
 
-        InputStream in = response.readEntity(InputStream.class);
+        String in = response.readEntity(String.class);
 
 //        response.close();
         client.close();

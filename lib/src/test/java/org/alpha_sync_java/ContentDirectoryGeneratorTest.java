@@ -4,10 +4,11 @@ import org.alpha_sync_java.application.interfaces.RequestsXML;
 import org.alpha_sync_java.application.interfaces.XMLExplorer;
 import org.alpha_sync_java.application.interfaces.XMLExplorerFactory;
 import org.alpha_sync_java.application.usecases.ContentDirectoryGenerator;
-import org.alpha_sync_java.domain.ContentDirectory;
+import org.alpha_sync_java.domain.upnp.ContentDirectory;
 import org.alpha_sync_java.domain.communication.LocatorURL;
 import org.alpha_sync_java.domain.communication.XMLTag;
 import org.alpha_sync_java.domain.context.ServerContext;
+import org.junit.Test;
 import org.mockito.Mockito;
 
 import java.io.BufferedReader;
@@ -22,32 +23,26 @@ import static org.mockito.Mockito.when;
 
 
 public class ContentDirectoryGeneratorTest {
-        @org.junit.Test
+
+        @Test
         public void someLibraryMethodReturnsTrue() throws Exception {
             RequestsXML requestsXMLMock = Mockito.mock(RequestsXML.class);
             XMLExplorer xmlExplorerMock = Mockito.mock(XMLExplorer.class);
 
-            XMLTag contentDirectoryTag = new XMLTag("serviceType", "urn:schemas-upnp-org:service:ContentDirectory:1", Stream.empty());
-            Mockito.mock(XMLExplorer.class);
+            XMLTag contentDirectoryTag = new XMLTag("serviceType", "urn:schemas-upnp-org:service:ContentDirectory:1");
+
             ServerContext sc = new ServerContext();
             sc.location.complete(new LocatorURL("http://test:8080/test/"));
-
-            InputStream in = getClass().getClassLoader().getResourceAsStream("ExampleDDXML.xml");
             XMLExplorerFactory xmlExplorerFactory = input -> xmlExplorerMock;
-            assertNotNull(in);
-            String xml = new BufferedReader(new InputStreamReader(in))
-                    .lines()
-                    .collect(Collectors.joining("\n"));
-            when(requestsXMLMock.getXML(sc.location.get())).thenReturn(in);
             when(xmlExplorerMock.getTagsSiblings(contentDirectoryTag)).thenReturn(
-                    Stream.of(new XMLTag("SCPDURL", "/SCPDURL", Stream.empty()),
-                            new XMLTag("controlURL", "/controlURL", Stream.empty()),
-                            new XMLTag("eventSubURL", "/eventSubURL", Stream.empty())
+                    Stream.of(new XMLTag("SCPDURL", "/SCPDURL"),
+                            new XMLTag("controlURL", "/controlURL"),
+                            new XMLTag("eventSubURL", "/eventSubURL")
                     )
             );
             when(xmlExplorerMock.getTagsByName("serviceType")).thenReturn(
-                    Stream.of(new XMLTag("serviceType", "urn:schemas-upnp-org:service:ConnectionManager:1", Stream.empty()),
-                            new XMLTag("serviceType", "urn:schemas-sony-com:service:XPushList:1", Stream.empty()),
+                    Stream.of(new XMLTag("serviceType", "urn:schemas-upnp-org:service:ConnectionManager:1"),
+                            new XMLTag("serviceType", "urn:schemas-sony-com:service:XPushList:1"),
                             contentDirectoryTag
                     )
             );

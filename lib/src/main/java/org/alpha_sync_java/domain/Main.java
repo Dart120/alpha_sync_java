@@ -5,7 +5,9 @@ import org.alpha_sync_java.application.interfaces.XMLExplorerFactory;
 import org.alpha_sync_java.application.usecases.ContentDirectoryGenerator;
 import org.alpha_sync_java.application.usecases.SSDP;
 import org.alpha_sync_java.domain.context.ServerContext;
+import org.alpha_sync_java.domain.upnp.ContentDirectory;
 import org.alpha_sync_java.infra.FetchXML;
+import org.alpha_sync_java.infra.MulticastConnector;
 import org.alpha_sync_java.infra.XMLParser;
 import org.xml.sax.SAXException;
 
@@ -15,7 +17,13 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws Exception {
         ServerContext sc = new ServerContext();
-        SSDP s = new SSDP(sc);
+        SSDP s = new SSDP(sc, (addr,port) -> {
+            try {
+                return new MulticastConnector(addr,port);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
         s.execute();
         FetchXML fxml = new FetchXML();
 
