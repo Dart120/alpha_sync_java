@@ -80,15 +80,19 @@ public class XMLParser implements XMLExplorer, Loggable {
     // TODO get tag contents by deferred completable future
     private XMLTag nodeToTag(Node node){
         logger().info("converting to tag: {}", node.getNodeName());
-        NamedNodeMap attributes = node.getAttributes();
-        int numberOfAttributes = attributes.getLength();
         Map<String,String> attributeMap = new HashMap<>();
-        for (int i = 0; i < numberOfAttributes; i++) {
-            attributes.item(i);
-            logger().info("found attribute: {}", attributes.item(i).getNodeName());
-            logger().info("found attribute value: {}", attributes.item(i).getNodeValue());
-            attributeMap.put(attributes.item(i).getNodeName(), attributes.item(i).getNodeValue());
+        if (node.hasAttributes()){
+            NamedNodeMap attributes = node.getAttributes();
+            int numberOfAttributes = attributes.getLength();
+
+            for (int i = 0; i < numberOfAttributes; i++) {
+                attributes.item(i);
+                logger().info("found attribute: {}", attributes.item(i).getNodeName());
+                logger().info("found attribute value: {}", attributes.item(i).getNodeValue());
+                attributeMap.put(attributes.item(i).getNodeName(), attributes.item(i).getNodeValue());
+            }
         }
+
 
         return new XMLTag.Builder()
                 .attributes(attributeMap)
@@ -109,12 +113,5 @@ public class XMLParser implements XMLExplorer, Loggable {
                 .build();
     }
 
-    public static class findingSiblings implements Supplier3<Node,List<XMLTag>,Callable<Node>>{
-        Node node;
 
-        @Override
-        public void apply(Node arg1, List<XMLTag> arg2, Callable<Node> arg3) throws Exception {
-
-        }
-    }
 }

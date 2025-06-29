@@ -4,7 +4,12 @@ import org.alpha_sync_java.application.UPNPObjectFactory;
 import org.alpha_sync_java.application.XMLUtils;
 import org.alpha_sync_java.application.interfaces.XMLExplorer;
 import org.alpha_sync_java.application.interfaces.XMLExplorerFactory;
+import org.alpha_sync_java.application.service.ContentDirectoryQueryService;
+import org.alpha_sync_java.domain.upnp.ContentDirectory;
 import org.alpha_sync_java.domain.upnp.UPNPObject;
+import org.alpha_sync_java.infra.Loggable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -12,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-public class BrowseResponseObject {
+public class BrowseResponseObject implements Loggable {
     String result;
     String updateID;
     Integer numberReturned;
@@ -31,12 +36,13 @@ public class BrowseResponseObject {
         return Objects.hash(result, updateID, numberReturned, totalMatches, xmlResult);
     }
 
-    public List<UPNPObject> getResultToUPNPObjects(XMLExplorerFactory xmlExplorerFactory) throws ParserConfigurationException, IOException, SAXException {
+    public List<UPNPObject> getResultToUPNPObjects(XMLExplorerFactory xmlExplorerFactory, ContentDirectoryQueryService contentDirectoryQueryService, ContentDirectory contentDirectory) throws ParserConfigurationException, IOException, SAXException {
         XMLExplorer xmlExplorer = xmlExplorerFactory.create(xmlResult);
 
-        return UPNPObjectFactory.create(xmlExplorer);
+        return UPNPObjectFactory.create(xmlExplorer, contentDirectoryQueryService, contentDirectory);
     }
     public static BrowseResponseObject fromXML(XMLExplorerFactory xmlExplorerFactory, String xml) throws ParserConfigurationException, IOException, SAXException {
+        System.out.println(xml);
         XMLExplorer xmlExplorer = xmlExplorerFactory.create(xml);
         return new Builder()
                 .result(XMLUtils.getSingleTextFromXML("Result", xmlExplorer))

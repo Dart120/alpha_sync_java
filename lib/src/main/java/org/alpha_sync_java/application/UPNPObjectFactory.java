@@ -1,11 +1,9 @@
 package org.alpha_sync_java.application;
 
 import org.alpha_sync_java.application.interfaces.XMLExplorer;
+import org.alpha_sync_java.application.service.ContentDirectoryQueryService;
 import org.alpha_sync_java.domain.communication.XMLTag;
-import org.alpha_sync_java.domain.upnp.UPNPContainer;
-import org.alpha_sync_java.domain.upnp.UPNPImage;
-import org.alpha_sync_java.domain.upnp.UPNPObject;
-import org.alpha_sync_java.domain.upnp.UPNPVideo;
+import org.alpha_sync_java.domain.upnp.*;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -16,13 +14,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class UPNPObjectFactory {
-    public static List<UPNPObject> create(XMLExplorer xmlExplorer) throws ParserConfigurationException, IOException, SAXException {
+
+
+
+    public static List<UPNPObject> create(XMLExplorer xmlExplorer, ContentDirectoryQueryService contentDirectoryQueryService, ContentDirectory contentDirectory) throws ParserConfigurationException, IOException, SAXException {
         String upnpClass = XMLUtils.getSingleTextFromXML("upnp:class", xmlExplorer);
         Stream<XMLTag> tagObjects = Stream.concat(xmlExplorer.getTagsByName("container"), xmlExplorer.getTagsByName("item"));
         return tagObjects
                 .map(tagObject -> {
                             try {
-                                return UPNPObjectFactory.upnpObjectMapper(tagObject);
+                                return upnpObjectMapper(tagObject, contentDirectoryQueryService, contentDirectory);
                             } catch (ParserConfigurationException | IOException | SAXException e) {
                                 throw new RuntimeException("Error mapping UPNPObject", e);
                             }
@@ -30,7 +31,7 @@ public class UPNPObjectFactory {
                 )
                 .collect(Collectors.toList());
     }
-    public static UPNPObject upnpObjectMapper(XMLTag tag) throws ParserConfigurationException, IOException, SAXException {
+    private static UPNPObject upnpObjectMapper(XMLTag tag, ContentDirectoryQueryService contentDirectoryQueryService, ContentDirectory contentDirectory) throws ParserConfigurationException, IOException, SAXException {
         String upnpClass = tag
                 .getContents().stream()
                 .filter(xmlTag -> Objects.equals(xmlTag.getName(), "upnp:class"))
@@ -49,6 +50,8 @@ public class UPNPObjectFactory {
                         .childCount(Integer
                                 .parseInt(tag.getAttributes()
                                         .get("childCount")))
+                        .contentDirectoryQueryService(contentDirectoryQueryService)
+                        .contentDirectory(contentDirectory)
                         .build();
 
             case "object.item.videoItem.movie":
