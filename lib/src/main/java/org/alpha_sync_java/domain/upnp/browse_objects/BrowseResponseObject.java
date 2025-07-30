@@ -22,12 +22,11 @@ public class BrowseResponseObject implements Loggable {
     String updateID;
     Integer numberReturned;
     Integer totalMatches;
-    private String xmlResult;
+    private final String xmlResult;
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof BrowseResponseObject)) return false;
-        BrowseResponseObject that = (BrowseResponseObject) o;
+        if (!(o instanceof BrowseResponseObject that)) return false;
         return Objects.equals(updateID, that.updateID) && Objects.equals(numberReturned, that.numberReturned) && Objects.equals(totalMatches, that.totalMatches);
     }
 
@@ -57,11 +56,9 @@ public class BrowseResponseObject implements Loggable {
         updateID = builder.updateID;
         numberReturned = builder.numberReturned;
         totalMatches = builder.totalMatches;
-        if (xmlResult == null){
-            result = result.replace("&lt;", "<");
-            result = result.replace("&gt;", ">");
-            xmlResult = result;
-        }
+        result = result.replace("&lt;", "<");
+        result = result.replace("&gt;", ">");
+        xmlResult = result;
     }
 
 

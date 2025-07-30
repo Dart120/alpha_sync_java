@@ -3,6 +3,7 @@ package org.alpha_sync_java;
 import org.alpha_sync_java.application.interfaces.SOAPConnector;
 import org.alpha_sync_java.application.interfaces.XMLExplorerFactory;
 import org.alpha_sync_java.application.service.ContentDirectoryQueryService;
+import org.alpha_sync_java.application.service.UPNPObjectCachingService;
 import org.alpha_sync_java.domain.communication.LocatorURL;
 import org.alpha_sync_java.domain.context.ServerContext;
 import org.alpha_sync_java.domain.upnp.ContentDirectory;
@@ -45,11 +46,7 @@ public class ContentDirectoryQueryServiceTest {
         XMLExplorerFactory xmlExplorerFactory = (xml) -> {
             try {
                 return new XMLParser(xml);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (SAXException e) {
-                throw new RuntimeException(e);
-            } catch (ParserConfigurationException e) {
+            } catch (IOException | SAXException | ParserConfigurationException e) {
                 throw new RuntimeException(e);
             }
         };
@@ -57,9 +54,10 @@ public class ContentDirectoryQueryServiceTest {
 
         String xml = LoadXMLForTest.loadXML("BrowseResponseObject.xml");
         SOAPConnector soapConnectorMock = Mockito.mock(SOAPConnector.class);
-        ContentDirectoryQueryService cut = new ContentDirectoryQueryService(soapConnectorMock,cd,xmlExplorerFactory);
+        UPNPObjectCachingService upnpObjectCachingService = new UPNPObjectCachingService(10);
+        ContentDirectoryQueryService cut = new ContentDirectoryQueryService(soapConnectorMock,xmlExplorerFactory);
         when(soapConnectorMock.requestXML(any(),anyString(), anyString())).thenReturn(CompletableFuture.completedFuture(xml));
-        List<UPNPObject> testResp = cut.query(bro);
+        List<UPNPObject> testResp = cut.query(bro,cd);
 
         UPNPObject actualUPNPObject = new UPNPObject
                 .Builder()

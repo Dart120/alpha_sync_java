@@ -1,12 +1,18 @@
 package org.alpha_sync_java.domain.upnp;
 
-import java.util.List;
+import org.alpha_sync_java.application.strategy.ExtractionStrategy;
 
-public class UPNPImage extends UPNPObject {
-    String upnpClass ="object.item.ImageItem.photo";
-    List<String> res;
-    String ORG;
-    String LRG;
+import java.net.URL;
+import java.util.Map;
+
+public class UPNPImage extends UPNPObject implements Downloadable {
+
+    Map<PHOTO_RES, URL> res;
+
+    public Map<PHOTO_RES, URL> getRes() {
+        return res;
+    }
+
     String TN;
     String SM;
 
@@ -16,13 +22,19 @@ public class UPNPImage extends UPNPObject {
         id = builder.id;
         parentID = builder.parentID;
         res = builder.res;
+        upnpClass ="object.item.ImageItem.photo";
     }
+
+
+
+
+
 
     public static class Builder extends SuperBuilder<UPNPImage.Builder> {
         private String dcTitle;
         private String id;
         private String parentID;
-        private List<String> res;
+        private Map<PHOTO_RES, URL> res;
 
         public Builder() {
         }
@@ -43,11 +55,11 @@ public class UPNPImage extends UPNPObject {
         }
 
         @Override
-        protected UPNPImage.Builder self() {
+        protected Builder self() {
             return this;
         }
 
-        public UPNPImage.Builder res(List<String> val) {
+        public Builder res(Map<PHOTO_RES, URL> val) {
             res = val;
             return self();
         }

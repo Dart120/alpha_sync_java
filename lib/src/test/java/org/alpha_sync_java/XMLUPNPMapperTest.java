@@ -1,14 +1,19 @@
 package org.alpha_sync_java;
 
+import org.alpha_sync_java.application.interfaces.SOAPConnector;
 import org.alpha_sync_java.application.interfaces.XMLExplorer;
 import org.alpha_sync_java.application.interfaces.XMLExplorerFactory;
 import org.alpha_sync_java.application.mapping.XMLUPNPMapper;
+import org.alpha_sync_java.application.service.ContentDirectoryQueryService;
+import org.alpha_sync_java.application.service.UPNPObjectCachingService;
+import org.alpha_sync_java.domain.upnp.ContentDirectory;
 import org.alpha_sync_java.domain.upnp.UPNPObject;
 import org.alpha_sync_java.domain.upnp.browse_objects.BrowseRequestObject;
 import org.alpha_sync_java.domain.upnp.browse_objects.BrowseResponseObject;
 import org.alpha_sync_java.infra.XMLParser;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,8 +24,12 @@ import static org.junit.Assert.assertEquals;
 
 public class XMLUPNPMapperTest {
     XMLExplorerFactory xmlExplorerFactory;
+    ContentDirectoryQueryService contentDirectoryQueryService;
+    ContentDirectory contentDirectory;
+    UPNPObjectCachingService upnpObjectCachingService;
     @Before
     public void setup(){
+
         xmlExplorerFactory = (in) -> {
             try {
                 return new XMLParser(in);
@@ -32,8 +41,12 @@ public class XMLUPNPMapperTest {
                 throw new RuntimeException(e);
             }
         };
+        SOAPConnector soapConnectorMock = Mockito.mock(SOAPConnector.class);
+        upnpObjectCachingService = new UPNPObjectCachingService(10);
+        contentDirectoryQueryService = new ContentDirectoryQueryService(soapConnectorMock,xmlExplorerFactory);
+        contentDirectory = new ContentDirectory.Builder().build();
     }
-//    TODO support props in xml as some info we need is in there
+
     @Test
     public void objToXMLTest() throws Exception {
         BrowseRequestObject bro = new BrowseRequestObject
@@ -93,11 +106,8 @@ public class XMLUPNPMapperTest {
                 .dcTitle("PhotoRoot")
                 .parentID("0")
                 .build();
-// TODO
-//        Vistor pattern for consuming UPNPObject
-//        Look at LSP in Builders in the UPNP inheritance
 
-        List<UPNPObject> testUPNPObject =  bro.getResultToUPNPObjects(xmlExplorerFactory);
+        List<UPNPObject> testUPNPObject =  bro.getResultToUPNPObjects(xmlExplorerFactory,contentDirectoryQueryService,contentDirectory);
 
 
         assertEquals(actualUPNPObject, testUPNPObject.get(0));

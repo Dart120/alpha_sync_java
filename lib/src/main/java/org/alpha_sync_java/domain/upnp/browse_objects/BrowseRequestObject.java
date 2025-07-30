@@ -9,6 +9,10 @@ public class BrowseRequestObject {
     Integer startingIdx;
     Integer requestedCount;
 
+    public String getObjectID() {
+        return objectID;
+    }
+
     private BrowseRequestObject(Builder builder) {
         objectID = builder.objectID;
         filter = builder.filter;

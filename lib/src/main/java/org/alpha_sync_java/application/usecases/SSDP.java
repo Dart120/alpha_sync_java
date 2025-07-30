@@ -11,6 +11,7 @@ import org.alpha_sync_java.infra.MulticastConnector;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.concurrent.*;
 
@@ -75,6 +76,8 @@ public CompletableFuture<String> execute(){
                             return this.serverContext.location.complete(new LocatorURL(location));
                         } catch (MalformedURLException e) {
                             throw new RuntimeException("Invalid URL discovered from SSDP");
+                        } catch (URISyntaxException e) {
+                            throw new RuntimeException(e);
                         }
                     })
                     .orElseGet(() -> this.serverContext.location.completeExceptionally(new RuntimeException("Couldn't find location")));

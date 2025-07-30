@@ -4,18 +4,19 @@ import org.alpha_sync_java.domain.communication.LocatorURL;
 import org.junit.Test;
 
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertEquals;
 
 public class LocatorURLTest {
     @Test
-    public void decompose() throws MalformedURLException {
+    public void decompose() throws MalformedURLException, URISyntaxException {
         LocatorURL p = new LocatorURL("http://test:8080/test/");
         assertEquals("http://test:8080/test/",p.getUrl());
     }
 
     @Test
-    public void from() throws MalformedURLException {
+    public void from() throws MalformedURLException, URISyntaxException {
         LocatorURL p = new LocatorURL("http://test:8080/test/");
 
         LocatorURL newURL = LocatorURL.from(p,"/new/");
@@ -23,7 +24,7 @@ public class LocatorURLTest {
     }
 
     @Test
-    public void fromEmpty() throws MalformedURLException {
+    public void fromEmpty() throws MalformedURLException, URISyntaxException {
         LocatorURL p = new LocatorURL("http://test:8080");
         LocatorURL newURL = LocatorURL.from(p,"");
         assertEquals("http://test:8080",newURL.getUrl());

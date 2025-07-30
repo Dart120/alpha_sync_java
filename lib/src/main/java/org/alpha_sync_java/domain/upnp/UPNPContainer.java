@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Supplier;
 
 public class UPNPContainer extends UPNPObject {
     Integer childCount;
@@ -16,10 +17,21 @@ public class UPNPContainer extends UPNPObject {
     ContentDirectoryQueryService contentDirectoryQueryService;
     ContentDirectory contentDirectory;
 
+    @Override
+    public String toString() {
+        return "UPNPContainer{" +
+                "childCount=" + childCount +
+                ", dcTitle='" + dcTitle + '\'' +
+                ", id='" + id + '\'' +
+                ", parentID='" + parentID + '\'' +
+                ", upnpClass='" + upnpClass + '\'' +
+                '}';
+    }
 
     public Integer getChildCount() {
         return childCount;
     }
+
 
     private UPNPContainer(Builder builder) {
         super(builder);
@@ -29,20 +41,13 @@ public class UPNPContainer extends UPNPObject {
         contentDirectory = builder.contentDirectory;
     }
 
-    public CompletableFuture<List<UPNPObject>> getChildren() {
-        return CompletableFuture.supplyAsync(()-> {
+    public Supplier<CompletableFuture<List<UPNPObject>>> getChildren() {
+        return () -> CompletableFuture.supplyAsync(()-> {
             BrowseRequestObject bro = constructBrowseRequestObject();
             try {
                 return contentDirectoryQueryService.query(bro, contentDirectory);
-            } catch (ExecutionException e) {
-                throw new RuntimeException(e);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (ParserConfigurationException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (SAXException e) {
+            } catch (ExecutionException | InterruptedException | ParserConfigurationException | IOException |
+                     SAXException e) {
                 throw new RuntimeException(e);
             }
         });

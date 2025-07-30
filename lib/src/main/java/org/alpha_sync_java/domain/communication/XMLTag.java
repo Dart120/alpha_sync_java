@@ -4,12 +4,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class XMLTag {
     String name;
     String textContent;
-    CompletableFuture<List<XMLTag>> contents;
+    Supplier<CompletableFuture<List<XMLTag>>>  contents;
     List<XMLTag> contentsStream;
     Map<String, String> attributes;
 
@@ -20,7 +21,7 @@ public class XMLTag {
         setAttributes(builder.attributes);
     }
 
-    public XMLTag(String name, String textContent, CompletableFuture<List<XMLTag>> contents) {
+    public XMLTag(String name, String textContent, Supplier<CompletableFuture<List<XMLTag>>>  contents) {
         this.name = name;
         this.textContent = textContent;
         this.contents = contents;
@@ -28,7 +29,7 @@ public class XMLTag {
     public XMLTag(String name, String textContent) {
         this.name = name;
         this.textContent = textContent;
-        this.contents = CompletableFuture.supplyAsync(Collections::emptyList);
+        this.contents = () -> CompletableFuture.supplyAsync(Collections::emptyList);
     }
 
     public void setAttributes(Map<String, String> attributes) {
@@ -56,10 +57,10 @@ public class XMLTag {
     }
 
     public List<XMLTag> getContents() {
-        return contents.join();
+        return contents.get().join();
     }
 
-    public void setContents(CompletableFuture<List<XMLTag>> contents) {
+    public void setContents(Supplier<CompletableFuture<List<XMLTag>>>  contents) {
         this.contents = contents;
     }
 
@@ -67,7 +68,7 @@ public class XMLTag {
     public static final class Builder {
         private String name;
         private String textContent;
-        private CompletableFuture<List<XMLTag>> contents;
+        private Supplier<CompletableFuture<List<XMLTag>>>  contents;
         private Map<String, String> attributes;
 
         public Builder() {
@@ -83,7 +84,7 @@ public class XMLTag {
             return this;
         }
 
-        public Builder contents(CompletableFuture<List<XMLTag>> val) {
+        public Builder contents(Supplier<CompletableFuture<List<XMLTag>>> val) {
             contents = val;
             return this;
         }

@@ -20,7 +20,6 @@ public class SSDPTest {
         String DISCOVERY_PORT = "1900";
         String DISCOVERY_MESSAGE = "M-SEARCH * HTTP/1.1\r\n" + "HOST:239.255.255.250:1900\r\n" + "ST:upnp:rootdevice\r\n" + "MX:2\r\n" + "MAN:\"ssdp:discover\"\r\n" + "\r\n";
         Connector mockConnector = mock(Connector.class);
-        Listener mockListener = mock(Listener.class);
         ServerContext serverContext = new ServerContext();
         SSDP useCase = new SSDP(serverContext, ((address, port) -> mockConnector));
         useCase.execute();

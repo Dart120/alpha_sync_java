@@ -2,12 +2,17 @@ package org.alpha_sync_java.application;
 
 import org.alpha_sync_java.application.interfaces.XMLExplorer;
 import org.alpha_sync_java.application.service.ContentDirectoryQueryService;
+import org.alpha_sync_java.domain.upnp.VIDEO_RES;
 import org.alpha_sync_java.domain.communication.XMLTag;
 import org.alpha_sync_java.domain.upnp.*;
+import org.alpha_sync_java.domain.utils.Pair;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -32,6 +37,7 @@ public class UPNPObjectFactory {
                 .collect(Collectors.toList());
     }
     private static UPNPObject upnpObjectMapper(XMLTag tag, ContentDirectoryQueryService contentDirectoryQueryService, ContentDirectory contentDirectory) throws ParserConfigurationException, IOException, SAXException {
+
         String upnpClass = tag
                 .getContents().stream()
                 .filter(xmlTag -> Objects.equals(xmlTag.getName(), "upnp:class"))
@@ -58,15 +64,24 @@ public class UPNPObjectFactory {
                 return new UPNPVideo
                         .Builder()
                         .id(tag.getAttributes().get("id"))
+
                         .dcTitle(XMLUtils
                                 .findTagInStream("dc:title", tag.getContents().stream())
                                 .getTextDecodedContent())
                         .parentID(tag.getAttributes().get("parentID"))
-                        .res(XMLUtils.findTagsInStream("res", tag.getContents().stream())
-                                .map(XMLTag::getTextDecodedContent)
-                                .collect(Collectors.toList()))
+                        .res(XMLUtils
+                                .findTagsInStream("res", tag.getContents().stream())
+                                .map((a)-> new Pair<VIDEO_RES, String>(VIDEO_RES.find(a.getTextDecodedContent()), a.getTextDecodedContent()))
+                                .map((videoResStringPair -> {
+                                    try {
+                                        return new Pair<>(videoResStringPair.first(),new URI(videoResStringPair.second()).toURL());
+                                    } catch (URISyntaxException | MalformedURLException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }))
+                                .collect(Collectors.toMap(Pair::first, Pair::second)))
                         .build();
-            case "object.item.ImageItem.photo":
+            case "object.item.imageItem.photo":
                 return new UPNPImage
                         .Builder()
                         .id(tag.getAttributes().get("id"))
@@ -74,9 +89,17 @@ public class UPNPObjectFactory {
                                 .findTagInStream("dc:title", tag.getContents().stream())
                                 .getTextDecodedContent())
                         .parentID(tag.getAttributes().get("parentID"))
-                        .res(XMLUtils.findTagsInStream("res", tag.getContents().stream())
-                                .map(XMLTag::getTextDecodedContent)
-                                .collect(Collectors.toList()))
+                        .res(XMLUtils
+                                .findTagsInStream("res", tag.getContents().stream())
+                                .map((a)-> new Pair<>(PHOTO_RES.find(a.getTextDecodedContent()), a.getTextDecodedContent()))
+                                .map((videoResStringPair -> {
+                                    try {
+                                        return new Pair<>(videoResStringPair.first(),new URI(videoResStringPair.second()).toURL());
+                                    } catch (URISyntaxException | MalformedURLException e) {
+                                        throw new RuntimeException(e);
+                                    }
+                                }))
+                                .collect(Collectors.toMap(Pair::first, Pair::second)))
                         .build();
             default:
                 throw new RuntimeException("Could not create UPNPObject from xml. Unknown upnp class: " + upnpClass);

@@ -1,5 +1,8 @@
 package org.alpha_sync_java.domain.upnp;
 
+import org.alpha_sync_java.application.strategy.ExtractionStrategy;
+
+import java.util.Map;
 import java.util.Objects;
 
 public class UPNPObject {
@@ -8,10 +11,12 @@ public class UPNPObject {
     String parentID;
     String upnpClass;
 
+
+
+
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof UPNPObject)) return false;
-        UPNPObject that = (UPNPObject) o;
+        if (!(o instanceof UPNPObject that)) return false;
         return Objects.equals(dcTitle, that.dcTitle) && Objects.equals(id, that.id) && Objects.equals(parentID, that.parentID) && Objects.equals(upnpClass, that.upnpClass);
     }
 

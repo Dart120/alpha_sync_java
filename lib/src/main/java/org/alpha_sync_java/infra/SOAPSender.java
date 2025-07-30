@@ -36,9 +36,7 @@ public class SOAPSender implements SOAPConnector, Loggable {
         return CompletableFuture.supplyAsync(()-> {
             try {
                 return response.get().readEntity(String.class);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            } catch (ExecutionException e) {
+            } catch (InterruptedException | ExecutionException e) {
                 throw new RuntimeException(e);
             }
         });

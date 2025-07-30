@@ -1,16 +1,13 @@
-package org.alpha_sync_java.domain;
-
+package org.alpha_sync_java.application.usecases;
 
 import org.alpha_sync_java.application.interfaces.SOAPConnector;
 import org.alpha_sync_java.application.interfaces.XMLExplorerFactory;
 import org.alpha_sync_java.application.service.ContentDirectoryQueryService;
-import org.alpha_sync_java.application.usecases.ContentDirectoryGenerator;
-import org.alpha_sync_java.application.usecases.SSDP;
 import org.alpha_sync_java.domain.context.ServerContext;
 import org.alpha_sync_java.domain.upnp.ContentDirectory;
 import org.alpha_sync_java.domain.upnp.UPNPContainer;
+import org.alpha_sync_java.domain.upnp.UPNPObject;
 import org.alpha_sync_java.domain.upnp.browse_objects.BrowseRequestObject;
-import org.alpha_sync_java.domain.upnp.browse_objects.BrowseResponseObject;
 import org.alpha_sync_java.infra.FetchXML;
 import org.alpha_sync_java.infra.MulticastConnector;
 import org.alpha_sync_java.infra.SOAPSender;
@@ -19,10 +16,11 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
-public class Main {
-    public static void main(String[] args) throws Exception {
-
+public class ConnectCamera {
+    public Optional<UPNPContainer> execute() throws IOException, ParserConfigurationException, ExecutionException, InterruptedException, SAXException {
         ServerContext sc = new ServerContext();
         SSDP s = new SSDP(sc, (addr,port) -> {
             try {
@@ -39,13 +37,8 @@ public class Main {
                 if(in.isEmpty()){
                     throw new RuntimeException("xml is Empty");
                 }
-
                 return new XMLParser(in);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (SAXException e) {
-                throw new RuntimeException(e);
-            } catch (ParserConfigurationException e) {
+            } catch (IOException | ParserConfigurationException | SAXException e) {
                 throw new RuntimeException(e);
             }
         };
@@ -61,9 +54,11 @@ public class Main {
                 .filter("*")
                 .startingIdx(0)
                 .build();
-        UPNPContainer c = (UPNPContainer) contentDirectoryQueryService.query(bro,cd).get(0);
-        c.getChildren().get().stream().map((upnpObject -> upnpObject));
-
-
+        UPNPObject obj =  contentDirectoryQueryService.query(bro,cd).getFirst();
+        if(obj instanceof UPNPContainer){
+            return Optional.of((UPNPContainer) obj);
+        } else {
+            return Optional.empty();
+        }
     }
 }
