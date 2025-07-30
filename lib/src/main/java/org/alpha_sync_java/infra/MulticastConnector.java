@@ -30,7 +30,7 @@ public class MulticastConnector implements Loggable, Connector {
                         return Optional.<NetworkInterface>empty();
                     }
                 })
-                .flatMap(opt -> opt.map(Stream::of).orElseGet(Stream::empty))
+                .flatMap(Optional::stream)
                 .forEach((usedInterface) -> logger().info("Using Interface :{}", usedInterface.getDisplayName()));
     }
 

@@ -2,6 +2,7 @@ package org.alpha_sync_java.application.usecases;
 
 
 import org.alpha_sync_java.application.interfaces.Connector;
+import org.alpha_sync_java.application.interfaces.ConnectorFactory;
 import org.alpha_sync_java.domain.communication.LocatorURL;
 import org.alpha_sync_java.domain.context.ServerContext;
 
@@ -10,6 +11,7 @@ import org.alpha_sync_java.infra.MulticastConnector;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.concurrent.*;
 
@@ -22,8 +24,8 @@ public class SSDP implements Loggable {
 
     private final Connector connector;
 
-    public SSDP(ServerContext serverContext) throws IOException {
-        this.connector = new MulticastConnector(DISCOVERY_ADDRESS, DISCOVERY_PORT);
+    public SSDP(ServerContext serverContext, ConnectorFactory connectorFactory) throws IOException {
+        this.connector = connectorFactory.create(DISCOVERY_ADDRESS, DISCOVERY_PORT);
         this.serverContext = serverContext;
     }
 //    should send message and register listener
@@ -74,6 +76,8 @@ public CompletableFuture<String> execute(){
                             return this.serverContext.location.complete(new LocatorURL(location));
                         } catch (MalformedURLException e) {
                             throw new RuntimeException("Invalid URL discovered from SSDP");
+                        } catch (URISyntaxException e) {
+                            throw new RuntimeException(e);
                         }
                     })
                     .orElseGet(() -> this.serverContext.location.completeExceptionally(new RuntimeException("Couldn't find location")));

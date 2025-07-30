@@ -3,6 +3,7 @@
  */
 package org.alpha_sync_java;
 
+import org.alpha_sync_java.application.interfaces.Connector;
 import org.alpha_sync_java.application.interfaces.Listener;
 import org.alpha_sync_java.application.interfaces.Sender;
 import org.alpha_sync_java.application.usecases.SSDP;
@@ -14,19 +15,31 @@ import static org.mockito.Mockito.*;
 
 
 public class SSDPTest {
-//    Need to check call execute
-//    Verify that message sent
-//    send a mock event to the listener
-//    Verify that message decoded well
     @Test public void someLibraryMethodReturnsTrue() throws Exception {
-        Sender mockSender = mock(Sender.class);
-        Listener mockListener = mock(Listener.class);
+        String DISCOVERY_ADDRESS = "239.255.255.250";
+        String DISCOVERY_PORT = "1900";
+        String DISCOVERY_MESSAGE = "M-SEARCH * HTTP/1.1\r\n" + "HOST:239.255.255.250:1900\r\n" + "ST:upnp:rootdevice\r\n" + "MX:2\r\n" + "MAN:\"ssdp:discover\"\r\n" + "\r\n";
+        Connector mockConnector = mock(Connector.class);
         ServerContext serverContext = new ServerContext();
-        SSDP useCase = new SSDP(serverContext);
+        SSDP useCase = new SSDP(serverContext, ((address, port) -> mockConnector));
         useCase.execute();
-        verify(mockSender, times(1)).send(anyString(), anyString(), anyString());
-        useCase.handleResponse("UPnP/1.0 SonyImagingDevice/1.0\r\nLOCATION: test");
-        assertEquals("test", serverContext.location.get());
+        useCase.handleResponse("UPnP/1.0 SonyImagingDevice/1.0\r\nLOCATION: http://google.com");
+        serverContext.location.whenCompleteAsync((url,ex) ->{
+            assertEquals("http://google.com", url.getUrl());
+            try {
+                verify(mockConnector, times(1)).send(DISCOVERY_ADDRESS, DISCOVERY_PORT, DISCOVERY_MESSAGE);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                verify(mockConnector, times(1)).listen(DISCOVERY_PORT,any());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+        });
+
+
 
     }
 }

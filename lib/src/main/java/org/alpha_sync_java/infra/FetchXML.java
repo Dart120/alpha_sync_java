@@ -9,20 +9,17 @@ import javax.ws.rs.core.Response;
 import java.io.InputStream;
 
 public class FetchXML implements RequestsXML, Loggable {
+    // TODO response close when done pls
     @Override
-    public InputStream getXML(LocatorURL url) {
+    public String getXML(LocatorURL url) {
         logger().info("Requested XML from: {}", url);
         Client client = ClientBuilder.newClient();
-
         WebTarget target = client.target(url.getUrl());
-
         Response response = target.request().get();
-
-        InputStream in = response.readEntity(InputStream.class);
-
-//        response.close();
+        String in = response.readEntity(String.class);
+        System.out.println("This is the XML");
+        System.out.println(in);
         client.close();
-
         return in;
     }
 }

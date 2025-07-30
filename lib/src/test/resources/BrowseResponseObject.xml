@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+    <s:Body>
+        <u:BrowseResponse xmlns:u="urn:schemas-upnp-org:service:ContentDirectory:1">
+            <Result>&lt;DIDL-Lite xmlns:dc="http://purl.org/dc/elements/1.1/"
+                xmlns="urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/"
+                xmlns:upnp="urn:schemas-upnp-org:metadata-1-0/upnp/"
+                xmlns:dlna="urn:schemas-dlna-org:metadata-1-0/"
+                xmlns:arib="urn:schemas-arib-or-jp:elements-1-0/"
+                xmlns:av="urn:schemas-sony-com:av"&gt;
+                &lt;container id="PhotoRoot" restricted="1" parentID="0" childCount="1"&gt;&lt;dc:title&gt;PhotoRoot&lt;/dc:title&gt;&lt;upnp:class&gt;object.container&lt;/upnp:class&gt;&lt;av:mediaClass&gt;P,V&lt;/av:mediaClass&gt;&lt;/container&gt;&lt;/DIDL-Lite&gt;
+            </Result>
+            <NumberReturned>1</NumberReturned>
+            <TotalMatches>1</TotalMatches>
+            <UpdateID>1769507432</UpdateID>
+        </u:BrowseResponse>
+    </s:Body>
+</s:Envelope>

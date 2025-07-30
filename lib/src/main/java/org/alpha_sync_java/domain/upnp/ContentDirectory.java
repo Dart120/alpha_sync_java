@@ -1,4 +1,4 @@
-package org.alpha_sync_java.domain;
+package org.alpha_sync_java.domain.upnp;
 
 import org.alpha_sync_java.domain.communication.LocatorURL;
 import org.alpha_sync_java.domain.communication.XMLTag;
@@ -62,9 +62,11 @@ public class ContentDirectory {
                         .findFirst()
                         .map(xmlTag -> {
                             try {
-                                return LocatorURL.from(baseURL, xmlTag.getTextContent());
+                                return LocatorURL.from(baseURL, xmlTag.getTextDecodedContent());
                             } catch (MalformedURLException e) {
                                 throw new RuntimeException("Could not extract SCPDURL from content directory");
+                            } catch (URISyntaxException e) {
+                                throw new RuntimeException(e);
                             }
                         })
                         .orElse(null);
@@ -72,8 +74,8 @@ public class ContentDirectory {
                         .findFirst()
                         .map(xmlTag -> {
                             try {
-                                return LocatorURL.from(baseURL, xmlTag.getTextContent());
-                            } catch (MalformedURLException e) {
+                                return LocatorURL.from(baseURL, xmlTag.getTextDecodedContent());
+                            } catch (MalformedURLException | URISyntaxException e) {
                                 throw new RuntimeException("Could not extract controlURL from content directory");
                             }
                         })
@@ -82,8 +84,8 @@ public class ContentDirectory {
                         .findFirst()
                         .map(xmlTag -> {
                             try {
-                                return LocatorURL.from(baseURL, xmlTag.getTextContent());
-                            } catch (MalformedURLException e) {
+                                return LocatorURL.from(baseURL, xmlTag.getTextDecodedContent());
+                            } catch (MalformedURLException | URISyntaxException e) {
                                     throw new RuntimeException("Could not extract eventSubURL from content directory");
                             }
                         })

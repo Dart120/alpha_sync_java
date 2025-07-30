@@ -5,5 +5,5 @@ import org.alpha_sync_java.domain.communication.LocatorURL;
 import java.io.InputStream;
 @FunctionalInterface
 public interface RequestsXML {
-    public InputStream getXML(LocatorURL url);
+    public String getXML(LocatorURL url);
 }
