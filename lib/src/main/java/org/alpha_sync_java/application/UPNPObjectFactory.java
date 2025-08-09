@@ -23,7 +23,6 @@ public class UPNPObjectFactory {
 
 
     public static List<UPNPObject> create(XMLExplorer xmlExplorer, ContentDirectoryQueryService contentDirectoryQueryService, ContentDirectory contentDirectory) throws ParserConfigurationException, IOException, SAXException {
-        String upnpClass = XMLUtils.getSingleTextFromXML("upnp:class", xmlExplorer);
         Stream<XMLTag> tagObjects = Stream.concat(xmlExplorer.getTagsByName("container"), xmlExplorer.getTagsByName("item"));
         return tagObjects
                 .map(tagObject -> {
@@ -56,8 +55,6 @@ public class UPNPObjectFactory {
                         .childCount(Integer
                                 .parseInt(tag.getAttributes()
                                         .get("childCount")))
-                        .contentDirectoryQueryService(contentDirectoryQueryService)
-                        .contentDirectory(contentDirectory)
                         .build();
 
             case "object.item.videoItem.movie":

@@ -17,9 +17,8 @@ public class FetchXML implements RequestsXML, Loggable {
         WebTarget target = client.target(url.getUrl());
         Response response = target.request().get();
         String in = response.readEntity(String.class);
-        System.out.println("This is the XML");
-        System.out.println(in);
         client.close();
+        response.close();
         return in;
     }
 }

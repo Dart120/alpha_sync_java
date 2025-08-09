@@ -1,5 +1,6 @@
 package org.alpha_sync_java;
 
+import org.alpha_sync_java.application.UpnpGetChildren;
 import org.alpha_sync_java.application.service.UPNPTreeExplorer;
 import org.alpha_sync_java.application.strategy.ExtractedByteArray;
 import org.alpha_sync_java.application.strategy.ExtractionStrategy;
@@ -25,32 +26,31 @@ import static org.mockito.Mockito.*;
 
 
 public class UPNPTreeExplorerTest {
-    UPNPTreeExplorer<ExtractedByteArray> explorer;
+    UPNPTreeExplorer explorer;
     ExtractionStrategy<ExtractedByteArray> strategy;
+    UpnpGetChildren upnpGetChildren;
 
     @Before
     public void setup(){
-
-
         strategy = mock(ExtractionStrategy.class);
-        explorer = new UPNPTreeExplorer<>();
+        explorer = new UPNPTreeExplorer();
+        upnpGetChildren = new UpnpGetChildren.Builder()
+                .build();
     }
 
     @Test
     public void testExploreWithOneContainer() throws Exception {
-        // Mocks
-
         UPNPContainer container = mock(UPNPContainer.class);
         UPNPObject child = mock(UPNPContainer.class);  // could also be a container if you want nested test
 
         // Behavior
         when(strategy.extract(eq(container), any(), any())).thenReturn(false);
-        when(container.getChildren()).thenReturn(() -> CompletableFuture.completedFuture(List.of(child)));
+        when(upnpGetChildren.getChildren(container)).thenReturn(() -> CompletableFuture.completedFuture(List.of(child)));
         when(strategy.extract(eq(child), any(), any())).thenReturn(true);  // no more recursion
 
         // Call
         Map<String, ExtractedByteArray> result = explorer
-                .explore(strategy, container, new TreeExplorerState.Builder().build())
+                .explore(strategy, container, new TreeExplorerState.Builder().build(), upnpGetChildren)
                 .get();  // wait for future to complete
 
         // Assert
@@ -70,13 +70,13 @@ public class UPNPTreeExplorerTest {
 
         // Behavior
         when(strategy.extract(eq(container), any(), any())).thenReturn(false);
-        when(container.getChildren()).thenReturn(() -> CompletableFuture.completedFuture(children1));
-        when(child1.getChildren()).thenReturn(() -> CompletableFuture.completedFuture(List.of(child2)));
+        when(upnpGetChildren.getChildren(container)).thenReturn(() -> CompletableFuture.completedFuture(children1));
+        when(upnpGetChildren.getChildren(child1)).thenReturn(() -> CompletableFuture.completedFuture(List.of(child2)));
         // no more recursion
 
         // Call
         Map<String, ExtractedByteArray> result = explorer
-                .explore(strategy, container, new TreeExplorerState.Builder().build())
+                .explore(strategy, container, new TreeExplorerState.Builder().build(), upnpGetChildren)
                 .get();  // wait for future to complete
 
         // Assert

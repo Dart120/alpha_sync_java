@@ -8,6 +8,6 @@ import java.io.IOException;
 import java.util.stream.Stream;
 
 public interface XMLExplorer {
-    public Stream<XMLTag> getTagsByName(String name) throws ParserConfigurationException, IOException, SAXException;
-    public Stream<XMLTag> getTagsSiblings(XMLTag tag);
+    Stream<XMLTag> getTagsByName(String name) throws ParserConfigurationException, IOException, SAXException;
+    Stream<XMLTag> getTagsSiblings(XMLTag tag);
 }

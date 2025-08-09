@@ -13,9 +13,8 @@ import java.util.stream.Stream;
 public class ContentDirectory {
         @Override
         public boolean equals(Object o) {
-                if (!(o instanceof ContentDirectory)) return false;
-                ContentDirectory that = (ContentDirectory) o;
-                return Objects.equals(SCPDURL, that.SCPDURL) && Objects.equals(controlURL, that.controlURL) && Objects.equals(eventSubURL, that.eventSubURL);
+                if (!(o instanceof ContentDirectory that)) return false;
+            return Objects.equals(SCPDURL, that.SCPDURL) && Objects.equals(controlURL, that.controlURL) && Objects.equals(eventSubURL, that.eventSubURL);
         }
 
         @Override

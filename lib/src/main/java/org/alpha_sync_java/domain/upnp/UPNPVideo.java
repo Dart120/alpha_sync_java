@@ -1,7 +1,5 @@
 package org.alpha_sync_java.domain.upnp;
 
-import org.alpha_sync_java.application.strategy.ExtractionStrategy;
-
 import java.net.URL;
 import java.util.Map;
 

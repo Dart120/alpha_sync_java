@@ -43,8 +43,8 @@ public class DownloadServiceTest {
         URL test = new URI("http://test:8080/test/tn").toURL();
         res.put(PHOTO_RES.TN, test);
         UPNPImage image = new UPNPImage.Builder().id("test").dcTitle("test").res(res).build();
-        downloadService.downloadToFile(image,PHOTO_RES.TN);
-        verify(downloader,times(1)).downloadToFile(test,"test");
+        downloadService.downloadToFile(image,"./test",PHOTO_RES.TN);
+        verify(downloader,times(1)).downloadToFile(test,"./test","test");
     }
 
 

@@ -16,7 +16,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.concurrent.CompletableFuture;
 
-// TODO
 public class NioDownloader implements Downloader {
 
     @Override

@@ -19,8 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Stream;
-// TODO refactor the adapter out
-// TODO change the parser to a stream based one or return lists from this
 
 public class XMLParser implements XMLExplorer, Loggable {
 

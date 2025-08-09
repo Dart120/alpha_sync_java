@@ -4,7 +4,7 @@ import java.net.URL;
 import java.util.Map;
 
 public interface Downloadable {
-    public Map<? extends ResolutionSelector, URL> getRes();
-    public String getDcTitle();
+    Map<? extends ResolutionSelector, URL> getRes();
+    String getDcTitle();
     String getId();
 }

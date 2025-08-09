@@ -1,9 +1,7 @@
 package org.alpha_sync_java;
 
 import org.alpha_sync_java.application.interfaces.SOAPConnector;
-import org.alpha_sync_java.application.interfaces.XMLExplorer;
 import org.alpha_sync_java.application.interfaces.XMLExplorerFactory;
-import org.alpha_sync_java.application.mapping.XMLUPNPMapper;
 import org.alpha_sync_java.application.service.ContentDirectoryQueryService;
 import org.alpha_sync_java.application.service.UPNPObjectCachingService;
 import org.alpha_sync_java.domain.upnp.ContentDirectory;

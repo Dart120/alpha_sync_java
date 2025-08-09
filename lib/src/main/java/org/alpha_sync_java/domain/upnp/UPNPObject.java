@@ -1,8 +1,5 @@
 package org.alpha_sync_java.domain.upnp;
 
-import org.alpha_sync_java.application.strategy.ExtractionStrategy;
-
-import java.util.Map;
 import java.util.Objects;
 
 public class UPNPObject {

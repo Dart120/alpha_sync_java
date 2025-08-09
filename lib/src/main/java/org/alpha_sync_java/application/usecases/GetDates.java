@@ -1,5 +1,6 @@
 package org.alpha_sync_java.application.usecases;
 
+import org.alpha_sync_java.application.UpnpGetChildren;
 import org.alpha_sync_java.application.interfaces.Downloader;
 import org.alpha_sync_java.application.service.DownloadService;
 import org.alpha_sync_java.application.service.UPNPTreeExplorer;
@@ -16,11 +17,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public class GetDates {
-    public List<String> execute(UPNPContainer c) throws ExecutionException, InterruptedException {
-        Downloader downloader = new NioDownloader();
-        DateExtraction de = new DateExtraction();
-        UPNPTreeExplorer ute = new UPNPTreeExplorer();
-        CompletableFuture<Map<String, ExtractedListUPNP>> m = Objects.requireNonNull(ute.explore(de, c, new TreeExplorerState.Builder().build()));
+    public List<String> execute(UPNPContainer c, DateExtraction dateExtraction, UPNPTreeExplorer ute, UpnpGetChildren upnpGetChildren) throws ExecutionException, InterruptedException {
+        CompletableFuture<Map<String, ExtractedListUPNP>> m = Objects.requireNonNull(ute.explore(dateExtraction, c, new TreeExplorerState.Builder().build(), upnpGetChildren));
         return m.get().keySet().stream().toList();
     }
 }

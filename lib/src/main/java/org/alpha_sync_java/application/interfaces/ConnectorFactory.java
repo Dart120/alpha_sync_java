@@ -4,5 +4,5 @@ import java.io.InputStream;
 
 @FunctionalInterface
 public interface ConnectorFactory {
-    public Connector create(String address, String port);
+    Connector create(String address, String port);
 }

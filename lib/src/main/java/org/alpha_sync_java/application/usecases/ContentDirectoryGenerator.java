@@ -23,8 +23,8 @@ public class ContentDirectoryGenerator {
 
     public ContentDirectory execute(ServerContext serverContext) throws ExecutionException, InterruptedException, ParserConfigurationException, IOException, SAXException {
         LocatorURL baseURL = serverContext.location.get();
-       String serviceDirectoryXML = requestsXML.getXML(baseURL);
-       XMLExplorer xmlExplorer = xmlExplorerFactory.create(serviceDirectoryXML);
+        String serviceDirectoryXML = requestsXML.getXML(baseURL);
+        XMLExplorer xmlExplorer = xmlExplorerFactory.create(serviceDirectoryXML);
         return xmlExplorer.getTagsByName("serviceType")
                 .filter(xmlTag -> xmlTag.getTextDecodedContent().equals("urn:schemas-upnp-org:service:ContentDirectory:1"))
                 .findFirst()
