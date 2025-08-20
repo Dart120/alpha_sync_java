@@ -1,5 +1,6 @@
 package org.alpha_sync_java.application.strategy;
 
+import org.alpha_sync_java.domain.extracted.ExtractedDownloadable;
 import org.alpha_sync_java.domain.TreeExplorerState;
 import org.alpha_sync_java.domain.upnp.*;
 import org.alpha_sync_java.infra.Loggable;

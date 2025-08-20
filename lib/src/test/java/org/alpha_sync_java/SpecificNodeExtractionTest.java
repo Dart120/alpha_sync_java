@@ -1,6 +1,7 @@
 package org.alpha_sync_java;
 
 import org.alpha_sync_java.application.strategy.*;
+import org.alpha_sync_java.domain.extracted.ExtractedDownloadable;
 import org.alpha_sync_java.domain.TreeExplorerState;
 import org.alpha_sync_java.domain.upnp.UPNPContainer;
 import org.alpha_sync_java.domain.upnp.UPNPImage;

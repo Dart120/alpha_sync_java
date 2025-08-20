@@ -8,10 +8,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
-// TODO test date selector
-// TODO test Time download handler
-// TODO test NodebyID
-// TODO test
 // TODO sync
 public class CameraConnector {
     ConnectCamera connectCamera;

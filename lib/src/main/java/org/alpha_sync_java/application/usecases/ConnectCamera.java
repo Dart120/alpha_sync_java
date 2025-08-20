@@ -1,6 +1,5 @@
 package org.alpha_sync_java.application.usecases;
 
-import org.alpha_sync_java.application.UPNPObjectFactory;
 import org.alpha_sync_java.application.interfaces.SOAPConnector;
 import org.alpha_sync_java.application.interfaces.XMLExplorerFactory;
 import org.alpha_sync_java.application.service.ContentDirectoryQueryService;
@@ -11,17 +10,13 @@ import org.alpha_sync_java.domain.upnp.UPNPContainer;
 import org.alpha_sync_java.domain.upnp.UPNPObject;
 import org.alpha_sync_java.domain.upnp.browse_objects.BrowseRequestObject;
 import org.alpha_sync_java.infra.FetchXML;
-import org.alpha_sync_java.infra.MulticastConnector;
-import org.alpha_sync_java.infra.SOAPSender;
-import org.alpha_sync_java.infra.XMLParser;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
-
+// TODO refactor so that objects are passed in and not created here
 public class ConnectCamera {
     ServerContext serverContext;
     SSDP ssdp;

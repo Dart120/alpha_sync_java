@@ -2,6 +2,8 @@ package org.alpha_sync_java.application.CLI;
 
 import org.alpha_sync_java.application.UpnpGetChildren;
 import org.alpha_sync_java.application.service.DownloadService;
+import org.alpha_sync_java.application.service.UPNPTreeExplorer;
+import org.alpha_sync_java.application.strategy.NodeByDateExtraction;
 import org.alpha_sync_java.application.usecases.DownloadDate;
 import org.alpha_sync_java.domain.CameraConnection;
 
@@ -15,9 +17,9 @@ public class TimeDownloadHandler {
     CameraConnection cameraConnection;
     DownloadService downloadService;
     UpnpGetChildren upnpGetChildren;
+    NodeByDateExtraction nodeByDateExtraction;
+    UPNPTreeExplorer upnpTreeExplorer;
     String pattern;
-
-
 
 
     private TimeDownloadHandler(Builder builder) {
@@ -25,6 +27,8 @@ public class TimeDownloadHandler {
         cameraConnection = builder.cameraConnection;
         downloadService = builder.downloadService;
         upnpGetChildren = builder.upnpGetChildren;
+        nodeByDateExtraction = builder.nodeByDateExtraction;
+        upnpTreeExplorer = builder.upnpTreeExplorer;
         pattern = builder.pattern;
     }
 
@@ -44,7 +48,7 @@ public class TimeDownloadHandler {
                 .flatMap(a -> dates.stream().filter(b -> b.startsWith(a)))
                 .forEach(date -> {
                     try {
-                        downloadDate.downloadDate(date, cameraConnection.getRoot(), downloadService, upnpGetChildren);
+                        downloadDate.downloadDate(date, cameraConnection.getRoot(), downloadService, upnpGetChildren,nodeByDateExtraction,upnpTreeExplorer);
                     } catch (ExecutionException | InterruptedException e) {
                         throw new RuntimeException(e);
                     }
@@ -56,6 +60,8 @@ public class TimeDownloadHandler {
         private CameraConnection cameraConnection;
         private DownloadService downloadService;
         private UpnpGetChildren upnpGetChildren;
+        private NodeByDateExtraction nodeByDateExtraction;
+        private UPNPTreeExplorer upnpTreeExplorer;
         private String pattern;
 
         public Builder() {
@@ -78,6 +84,16 @@ public class TimeDownloadHandler {
 
         public Builder upnpGetChildren(UpnpGetChildren val) {
             upnpGetChildren = val;
+            return this;
+        }
+
+        public Builder nodeByDateExtraction(NodeByDateExtraction val) {
+            nodeByDateExtraction = val;
+            return this;
+        }
+
+        public Builder upnpTreeExplorer(UPNPTreeExplorer val) {
+            upnpTreeExplorer = val;
             return this;
         }
 

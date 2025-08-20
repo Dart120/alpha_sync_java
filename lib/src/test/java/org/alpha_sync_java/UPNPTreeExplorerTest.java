@@ -2,7 +2,7 @@ package org.alpha_sync_java;
 
 import org.alpha_sync_java.application.UpnpGetChildren;
 import org.alpha_sync_java.application.service.UPNPTreeExplorer;
-import org.alpha_sync_java.application.strategy.ExtractedByteArray;
+import org.alpha_sync_java.domain.extracted.ExtractedByteArray;
 import org.alpha_sync_java.application.strategy.ExtractionStrategy;
 import org.alpha_sync_java.domain.TreeExplorerState;
 import org.alpha_sync_java.domain.upnp.UPNPContainer;
@@ -18,6 +18,8 @@ import java.util.concurrent.CompletableFuture;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,15 +29,16 @@ import static org.mockito.Mockito.*;
 
 public class UPNPTreeExplorerTest {
     UPNPTreeExplorer explorer;
+    @Mock
     ExtractionStrategy<ExtractedByteArray> strategy;
+    @Mock
     UpnpGetChildren upnpGetChildren;
 
     @Before
     public void setup(){
-        strategy = mock(ExtractionStrategy.class);
+        MockitoAnnotations.initMocks(this);
         explorer = new UPNPTreeExplorer();
-        upnpGetChildren = new UpnpGetChildren.Builder()
-                .build();
+
     }
 
     @Test

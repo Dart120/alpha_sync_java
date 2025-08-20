@@ -1,4 +1,4 @@
-package org.alpha_sync_java.application.strategy;
+package org.alpha_sync_java.domain.extracted;
 
 import org.alpha_sync_java.domain.upnp.Downloadable;
 

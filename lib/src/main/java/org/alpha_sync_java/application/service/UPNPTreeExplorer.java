@@ -1,7 +1,7 @@
 package org.alpha_sync_java.application.service;
 
 import org.alpha_sync_java.application.UpnpGetChildren;
-import org.alpha_sync_java.application.strategy.Extracted;
+import org.alpha_sync_java.domain.extracted.Extracted;
 import org.alpha_sync_java.application.strategy.ExtractionStrategy;
 import org.alpha_sync_java.domain.TreeExplorerState;
 import org.alpha_sync_java.domain.upnp.UPNPContainer;

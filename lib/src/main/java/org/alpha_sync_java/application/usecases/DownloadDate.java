@@ -4,6 +4,7 @@ import org.alpha_sync_java.application.UpnpGetChildren;
 import org.alpha_sync_java.application.service.DownloadService;
 import org.alpha_sync_java.application.service.UPNPTreeExplorer;
 import org.alpha_sync_java.application.strategy.*;
+import org.alpha_sync_java.domain.extracted.ExtractedDownloadable;
 import org.alpha_sync_java.domain.TreeExplorerState;
 import org.alpha_sync_java.domain.upnp.*;
 
@@ -14,9 +15,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 public class DownloadDate {
-    public void downloadDate(String date, UPNPContainer c, DownloadService downloadService, UpnpGetChildren upnpGetChildren) throws ExecutionException, InterruptedException {
-        NodeByDateExtraction nodeByDateExtraction = new NodeByDateExtraction();
-        UPNPTreeExplorer ute = new UPNPTreeExplorer();
+    public void downloadDate(String date, UPNPContainer c, DownloadService downloadService, UpnpGetChildren upnpGetChildren, NodeByDateExtraction nodeByDateExtraction, UPNPTreeExplorer ute) throws ExecutionException, InterruptedException {
         CompletableFuture<Map<String, ExtractedDownloadable>> d = Objects.requireNonNull(ute.explore(nodeByDateExtraction, c, new TreeExplorerState
                 .Builder()
                 .date(date)

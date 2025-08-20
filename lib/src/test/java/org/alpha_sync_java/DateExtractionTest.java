@@ -1,26 +1,26 @@
 package org.alpha_sync_java;
 
+import org.alpha_sync_java.application.UpnpGetChildren;
 import org.alpha_sync_java.application.strategy.DateExtraction;
-import org.alpha_sync_java.application.strategy.ExtractedListUPNP;
+import org.alpha_sync_java.domain.extracted.ExtractedListUPNP;
 import org.alpha_sync_java.domain.upnp.UPNPContainer;
 import org.alpha_sync_java.domain.upnp.UPNPImage;
-import org.alpha_sync_java.domain.upnp.UPNPObject;
 import org.junit.Test;
 import org.junit.Before;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
 
 public class DateExtractionTest {
     DateExtraction dateExtraction;
+    UpnpGetChildren upnpGetChildren;
     @Before
     public void setUp() {
-        dateExtraction  = new DateExtraction();
+        upnpGetChildren = mock(UpnpGetChildren.class);
+        dateExtraction  = new DateExtraction(upnpGetChildren);
     }
 
     @Test

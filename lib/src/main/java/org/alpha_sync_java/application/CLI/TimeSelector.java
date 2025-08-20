@@ -49,11 +49,11 @@ public abstract class TimeSelector {
                     .map(a -> (first ? "" : from + "-") + a)
                     .flatMap(a -> dates.stream().filter(b -> b.startsWith(a)))
                     .forEach(date -> {
-                        try {
-                            downloadDate.downloadDate(date, cameraConnection.getRoot(), downloadService, upnpGetChildren);
-                        } catch (ExecutionException | InterruptedException e) {
-                            throw new RuntimeException(e);
-                        }
+//                        try {
+////                            downloadDate.downloadDate(date, cameraConnection.getRoot(), downloadService, upnpGetChildren);
+//                        } catch (ExecutionException | InterruptedException e) {
+//                            throw new RuntimeException(e);
+//                        }
                     });
             return Optional.empty();
         }

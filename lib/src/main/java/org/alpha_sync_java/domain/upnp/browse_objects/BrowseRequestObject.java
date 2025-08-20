@@ -9,6 +9,18 @@ public class BrowseRequestObject {
     Integer startingIdx;
     Integer requestedCount;
 
+    public String getFilter() {
+        return filter;
+    }
+
+    public Integer getStartingIdx() {
+        return startingIdx;
+    }
+
+    public Integer getRequestedCount() {
+        return requestedCount;
+    }
+
     public String getObjectID() {
         return objectID;
     }

@@ -1,16 +1,13 @@
 package org.alpha_sync_java.application.strategy;
 
 import org.alpha_sync_java.application.UpnpGetChildren;
+import org.alpha_sync_java.domain.extracted.ExtractedListUPNP;
 import org.alpha_sync_java.domain.TreeExplorerState;
 import org.alpha_sync_java.domain.upnp.UPNPContainer;
 import org.alpha_sync_java.domain.upnp.UPNPObject;
 import org.alpha_sync_java.infra.Loggable;
 
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 public class DateExtraction implements ExtractionStrategy<ExtractedListUPNP>, Loggable {

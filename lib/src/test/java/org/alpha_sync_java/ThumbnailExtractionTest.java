@@ -1,8 +1,7 @@
 package org.alpha_sync_java;
 
 import org.alpha_sync_java.application.service.DownloadService;
-import org.alpha_sync_java.application.strategy.ExtractedByteArray;
-import org.alpha_sync_java.application.strategy.ExtractedListUPNP;
+import org.alpha_sync_java.domain.extracted.ExtractedByteArray;
 import org.alpha_sync_java.application.strategy.ThumbnailExtraction;
 import org.alpha_sync_java.domain.TreeExplorerState;
 import org.alpha_sync_java.domain.upnp.PHOTO_RES;
@@ -18,7 +17,6 @@ import java.nio.channels.ReadableByteChannel;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;

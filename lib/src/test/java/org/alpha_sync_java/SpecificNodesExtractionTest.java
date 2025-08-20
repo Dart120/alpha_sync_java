@@ -1,7 +1,6 @@
 package org.alpha_sync_java;
 
-import org.alpha_sync_java.application.strategy.ExtractedDownloadable;
-import org.alpha_sync_java.application.strategy.SpecificNodeExtraction;
+import org.alpha_sync_java.domain.extracted.ExtractedDownloadable;
 import org.alpha_sync_java.application.strategy.SpecificNodesExtraction;
 import org.alpha_sync_java.domain.TreeExplorerState;
 import org.alpha_sync_java.domain.upnp.UPNPContainer;

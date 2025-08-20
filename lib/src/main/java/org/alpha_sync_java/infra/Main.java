@@ -9,6 +9,7 @@ import org.alpha_sync_java.application.interfaces.XMLExplorerFactory;
 import org.alpha_sync_java.application.service.DownloadService;
 import org.alpha_sync_java.application.service.UPNPTreeExplorer;
 import org.alpha_sync_java.application.strategy.DateExtraction;
+import org.alpha_sync_java.application.strategy.NodeByDateExtraction;
 import org.alpha_sync_java.application.usecases.*;
 import org.alpha_sync_java.application.CLI.*;
 import org.alpha_sync_java.domain.CameraConnection;
@@ -69,12 +70,15 @@ public class Main {
                 .build();
         UPNPTreeExplorer upnpTreeExplorer = new UPNPTreeExplorer();
         DateExtraction dateExtraction = new DateExtraction(upnpGetChildren);
+        NodeByDateExtraction nodeByDateExtraction = new NodeByDateExtraction();
         TimeDownloadHandler dayHandler = new TimeDownloadHandler
                 .Builder()
                 .cameraConnection(cc)
                 .upnpGetChildren(upnpGetChildren)
                 .downloadDate(downloadDate)
                 .downloadService(downloadService)
+                .nodeByDateExtraction(nodeByDateExtraction)
+                .upnpTreeExplorer(upnpTreeExplorer)
                 .pattern("\\d\\d\\d\\d-\\d\\d-\\d\\d")
                 .build();
         TimeDownloadHandler monthHandler = new TimeDownloadHandler
@@ -83,6 +87,8 @@ public class Main {
                 .upnpGetChildren(upnpGetChildren)
                 .downloadDate(downloadDate)
                 .downloadService(downloadService)
+                .nodeByDateExtraction(nodeByDateExtraction)
+                .upnpTreeExplorer(upnpTreeExplorer)
                 .pattern("\\d\\d\\d\\d-\\d\\d")
                 .build();
         TimeDownloadHandler yearHandler = new TimeDownloadHandler
@@ -91,6 +97,8 @@ public class Main {
                 .upnpGetChildren(upnpGetChildren)
                 .downloadDate(downloadDate)
                 .downloadService(downloadService)
+                .nodeByDateExtraction(nodeByDateExtraction)
+                .upnpTreeExplorer(upnpTreeExplorer)
                 .pattern("\\d\\d\\d\\d")
                 .build();
         DateSelector dateSelector = new DateSelector

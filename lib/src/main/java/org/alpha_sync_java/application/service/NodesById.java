@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
-
+// TODO refactor this to use the CD request with cache instead (it might already do that somewhere)
 public class NodesById {
 
     UPNPObjectCachingService upnpObjectCachingService;

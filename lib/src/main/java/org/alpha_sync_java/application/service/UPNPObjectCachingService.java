@@ -1,6 +1,6 @@
 package org.alpha_sync_java.application.service;
 
-import org.alpha_sync_java.application.strategy.ExtractedDownloadable;
+import org.alpha_sync_java.domain.extracted.ExtractedDownloadable;
 import org.alpha_sync_java.domain.upnp.UPNPObject;
 
 import java.util.*;

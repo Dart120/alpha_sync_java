@@ -19,9 +19,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class UPNPObjectFactory {
-
-
-
     public static List<UPNPObject> create(XMLExplorer xmlExplorer, ContentDirectoryQueryService contentDirectoryQueryService, ContentDirectory contentDirectory) throws ParserConfigurationException, IOException, SAXException {
         Stream<XMLTag> tagObjects = Stream.concat(xmlExplorer.getTagsByName("container"), xmlExplorer.getTagsByName("item"));
         return tagObjects

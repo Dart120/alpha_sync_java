@@ -1,14 +1,11 @@
 package org.alpha_sync_java.application.usecases;
 
 import org.alpha_sync_java.application.UpnpGetChildren;
-import org.alpha_sync_java.application.interfaces.Downloader;
-import org.alpha_sync_java.application.service.DownloadService;
 import org.alpha_sync_java.application.service.UPNPTreeExplorer;
 import org.alpha_sync_java.application.strategy.*;
+import org.alpha_sync_java.domain.extracted.ExtractedListUPNP;
 import org.alpha_sync_java.domain.TreeExplorerState;
 import org.alpha_sync_java.domain.upnp.UPNPContainer;
-import org.alpha_sync_java.domain.upnp.UPNPObject;
-import org.alpha_sync_java.infra.NioDownloader;
 
 import java.util.List;
 import java.util.Map;

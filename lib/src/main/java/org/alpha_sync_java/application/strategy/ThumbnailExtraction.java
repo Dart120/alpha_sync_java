@@ -1,15 +1,12 @@
 package org.alpha_sync_java.application.strategy;
 
 import org.alpha_sync_java.application.service.DownloadService;
+import org.alpha_sync_java.domain.extracted.ExtractedByteArray;
 import org.alpha_sync_java.domain.TreeExplorerState;
 import org.alpha_sync_java.domain.upnp.*;
 import org.alpha_sync_java.infra.Loggable;
 
-import java.nio.channels.ReadableByteChannel;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 public class ThumbnailExtraction implements ExtractionStrategy<ExtractedByteArray>, Loggable {
